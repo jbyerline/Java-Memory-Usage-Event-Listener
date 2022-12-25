@@ -3,13 +3,13 @@ import java.time.Duration
 
 class Main {
   static void main(String[] args) {
-    double startingThreshold = 0.1d
+    double threshold = 0.1d
     // Get start time of program
     final long startTime = System.nanoTime()
     // Percentage Formatter
     DecimalFormat df = new DecimalFormat("0.00")
     // Set initial threshold percentage
-    MemoryWarningSystem.setPercentageUsageThreshold(startingThreshold)
+    MemoryWarningSystem.setPercentageUsageThreshold(threshold)
     // Instantiate Memory Warning System
     MemoryWarningSystem mws = new MemoryWarningSystem()
     // Create a listener
@@ -28,16 +28,14 @@ class Main {
         System.out.println("--- WARNING: Memory usage low! ---")
         System.out.println("Memory used: " + Utils.getDynamicSpace(usedMemory) + " of " + Utils.getDynamicSpace(maxMemory) + " --> " + df.format(percentageUsed) + "%")
         System.out.println(formattedElapsedTime)
-        if (startingThreshold < 0.9d){
-          startingThreshold = startingThreshold + 0.1d
-        } else if (startingThreshold == 0.9d){
-          startingThreshold = 0.97d
-        } else if (startingThreshold == 0.97d){
+        if (threshold < 0.5d){
+          threshold = threshold + 0.1d
+        } else {
           System.out.println("Memory Full, exiting program gracefully")
-          System.exit(1)
+          Runtime.getRuntime().halt(1)
         }
         // Set new threshold for 2nd alert
-        MemoryWarningSystem.setPercentageUsageThreshold(startingThreshold)
+        MemoryWarningSystem.setPercentageUsageThreshold(threshold)
       }
     })
     // Make a LinkedList of Doubles
